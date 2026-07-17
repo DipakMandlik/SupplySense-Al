@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Cpu, KeyRound, BellRing, PaintBucket } from "lucide-react";
+import { Building2, Cpu, KeyRound, BellRing, Loader2, PaintBucket } from "lucide-react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,13 +11,47 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/common/ToastProvider";
+
+type ConnectionStatus = "Not Connected" | "Connecting..." | "Connected";
 
 export default function SettingsPage() {
+  const { toast } = useToast();
   const [forecastModel, setForecastModel] = useState("ensemble-v3");
   const [theme, setTheme] = useState("light");
   const [notifyHigh, setNotifyHigh] = useState(true);
   const [notifyMedium, setNotifyMedium] = useState(true);
   const [notifyLow, setNotifyLow] = useState(false);
+  const [connections, setConnections] = useState<Record<string, ConnectionStatus>>({
+    "SAP ERP": "Not Connected",
+    Snowflake: "Not Connected",
+    "MES Platform": "Not Connected",
+  });
+
+  function handleConfigure(name: string) {
+    setConnections((prev) => ({ ...prev, [name]: "Connecting..." }));
+    toast({ title: `Connecting to ${name}...`, variant: "loading" });
+    window.setTimeout(() => {
+      setConnections((prev) => ({ ...prev, [name]: "Connected" }));
+      toast({
+        title: `${name} connected`,
+        description: "Live sync will begin once production credentials are supplied.",
+        variant: "success",
+      });
+    }, 1100);
+  }
+
+  function handleSave() {
+    toast({
+      title: "Settings saved",
+      description: "Your configuration has been applied to this workspace.",
+      variant: "success",
+    });
+  }
+
+  function handleCancel() {
+    toast({ title: "Changes discarded", variant: "info" });
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -118,9 +152,9 @@ export default function SettingsPage() {
           className="lg:col-span-2"
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <IntegrationTile name="SAP ERP" status="Not Connected" />
-            <IntegrationTile name="Snowflake" status="Not Connected" />
-            <IntegrationTile name="MES Platform" status="Not Connected" />
+            {Object.entries(connections).map(([name, status]) => (
+              <IntegrationTile key={name} name={name} status={status} onConfigure={() => handleConfigure(name)} />
+            ))}
           </div>
           <FieldRow label="API Endpoint">
             <Input placeholder="https://api.yourcompany.com/v1" />
@@ -132,8 +166,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button variant="outline">Cancel</Button>
-        <Button>Save Changes</Button>
+        <Button variant="outline" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button onClick={handleSave}>Save Changes</Button>
       </div>
     </div>
   );
@@ -194,16 +230,34 @@ function RuleRow({
   );
 }
 
-function IntegrationTile({ name, status }: { name: string; status: string }) {
+function IntegrationTile({
+  name,
+  status,
+  onConfigure,
+}: {
+  name: string;
+  status: ConnectionStatus;
+  onConfigure: () => void;
+}) {
+  const isConnecting = status === "Connecting...";
+  const isConnected = status === "Connected";
+
   return (
     <div className="rounded-lg border border-border-subtle bg-surface p-4">
       <p className="text-sm font-semibold text-foreground">{name}</p>
-      <Badge variant="neutral" className="mt-2">
+      <Badge variant={isConnected ? "success" : "neutral"} className="mt-2">
         {status}
       </Badge>
       <Separator className="my-3" />
-      <Button variant="outline" size="sm" className="w-full">
-        Configure
+      <Button
+        variant="outline"
+        size="sm"
+        className="w-full"
+        disabled={isConnecting}
+        onClick={onConfigure}
+      >
+        {isConnecting && <Loader2 className="size-3.5 animate-spin" />}
+        {isConnected ? "Reconfigure" : isConnecting ? "Connecting" : "Configure"}
       </Button>
     </div>
   );

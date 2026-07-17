@@ -123,14 +123,20 @@ export const products: Product[] = Array.from({ length: 108 }, (_, i) => {
 
 // ---------- Plants (18) ----------
 const PLANT_TYPES: Plant["type"][] = ["manufacturing", "blending", "packaging"];
+const plantNameCounts = new Map<string, number>();
+
 export const plants: Plant[] = Array.from({ length: 18 }, (_, i) => {
   const region = REGIONS[i % REGIONS.length];
   const state = rand.pick(STATE_BY_REGION[region]);
   const city = CITY_BY_STATE[state];
   const [lat, lng] = COORDS_BY_STATE[state];
+  const baseName = `${city} ${rand.pick(["Manufacturing Hub", "Production Plant", "Fabrication Unit"])}`;
+  const occurrence = (plantNameCounts.get(baseName) ?? 0) + 1;
+  plantNameCounts.set(baseName, occurrence);
+  const name = occurrence > 1 ? `${baseName} (Unit ${occurrence})` : baseName;
   return {
     id: `PLT-${String(i + 1).padStart(3, "0")}`,
-    name: `${city} ${rand.pick(["Manufacturing Hub", "Production Plant", "Fabrication Unit"])}`,
+    name,
     region,
     state,
     city,
@@ -143,6 +149,8 @@ export const plants: Plant[] = Array.from({ length: 18 }, (_, i) => {
 });
 
 // ---------- Warehouses (25) ----------
+const warehouseNameCounts = new Map<string, number>();
+
 export const warehouses: Warehouse[] = Array.from({ length: 25 }, (_, i) => {
   const region = REGIONS[i % REGIONS.length];
   const state = rand.pick(STATE_BY_REGION[region]);
@@ -156,9 +164,15 @@ export const warehouses: Warehouse[] = Array.from({ length: 25 }, (_, i) => {
   else if (daysRemaining < 12 || inventoryLevel < 45) riskLevel = "high";
   else if (daysRemaining < 20 || inventoryLevel < 60) riskLevel = "medium";
 
+  const baseWarehouseName = `${city} Distribution Center`;
+  const whOccurrence = (warehouseNameCounts.get(baseWarehouseName) ?? 0) + 1;
+  warehouseNameCounts.set(baseWarehouseName, whOccurrence);
+  const warehouseName =
+    whOccurrence > 1 ? `${baseWarehouseName} (Zone ${whOccurrence})` : baseWarehouseName;
+
   return {
     id: `WH-${String(i + 1).padStart(3, "0")}`,
-    name: `${city} Distribution Center`,
+    name: warehouseName,
     region,
     state,
     city,
@@ -176,6 +190,22 @@ export const warehouses: Warehouse[] = Array.from({ length: 25 }, (_, i) => {
 
 // ---------- Dealers (350) ----------
 const DEALER_TIERS: Dealer["tier"][] = ["Platinum", "Gold", "Silver"];
+const DEALER_OWNER_PREFIXES = [
+  "Sharma",
+  "Patel",
+  "Reddy",
+  "Iyer",
+  "Singh",
+  "Gupta",
+  "Nair",
+  "Verma",
+  "Khan",
+  "Joshi",
+  "Mehta",
+  "Rao",
+];
+const dealerNameCounts = new Map<string, number>();
+
 export const dealers: Dealer[] = Array.from({ length: 350 }, (_, i) => {
   const region = REGIONS[i % REGIONS.length];
   const state = rand.pick(STATE_BY_REGION[region]);
@@ -183,9 +213,14 @@ export const dealers: Dealer[] = Array.from({ length: 350 }, (_, i) => {
   const [lat, lng] = COORDS_BY_STATE[state];
   const linkedWarehouse =
     rand.pick(warehouses.filter((w) => w.region === region)) ?? rand.pick(warehouses);
+  const baseDealerName = `${city} ${rand.pick(DEALER_OWNER_PREFIXES)} ${rand.pick(["Paints & Hardware", "Building Solutions", "Home Center", "Trading Co.", "Enterprises"])}`;
+  const dealerOccurrence = (dealerNameCounts.get(baseDealerName) ?? 0) + 1;
+  dealerNameCounts.set(baseDealerName, dealerOccurrence);
+  const dealerName =
+    dealerOccurrence > 1 ? `${baseDealerName} #${dealerOccurrence}` : baseDealerName;
   return {
     id: `DLR-${String(i + 1).padStart(4, "0")}`,
-    name: `${city} ${rand.pick(["Paints & Hardware", "Building Solutions", "Home Center", "Trading Co.", "Enterprises"])}`,
+    name: dealerName,
     region,
     state,
     city,

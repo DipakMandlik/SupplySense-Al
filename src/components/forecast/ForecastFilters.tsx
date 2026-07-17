@@ -15,7 +15,7 @@ interface ForecastFiltersProps {
   regions: Region[];
   products: { id: string; name: string }[];
   dealers: string[];
-  plants: string[];
+  plants: { id: string; name: string }[];
   value: FilterState;
   onChange: (value: FilterState) => void;
 }
@@ -47,7 +47,7 @@ export function ForecastFilters({ regions, products, dealers, plants, value, onC
           <SelectContent>
             <SelectItem value="All Products">All Products</SelectItem>
             {products.map((p) => (
-              <SelectItem key={p.id} value={p.name}>
+              <SelectItem key={p.id} value={p.id}>
                 {p.name}
               </SelectItem>
             ))}
@@ -77,8 +77,8 @@ export function ForecastFilters({ regions, products, dealers, plants, value, onC
           </SelectTrigger>
           <SelectContent>
             {plants.map((p) => (
-              <SelectItem key={p} value={p}>
-                {p}
+              <SelectItem key={p.id} value={p.id}>
+                {p.name}
               </SelectItem>
             ))}
           </SelectContent>

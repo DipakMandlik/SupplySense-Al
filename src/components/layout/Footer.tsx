@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="border-t border-border-subtle bg-white">
       <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-3 px-6 py-6 text-center lg:flex-row lg:justify-between lg:text-left">
         <div className="flex items-center gap-3">
-          <PibythreeLogo showWordmark={false} />
+          <PibythreeLogo size={26} />
           <div>
             <p className="text-sm font-medium text-foreground">Pibythree SupplySense AI</p>
             <p className="text-xs text-muted-foreground">

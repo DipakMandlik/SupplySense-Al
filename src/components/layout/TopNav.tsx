@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Bell, ChartSpline, Settings } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bell, ChartSpline, LogOut, Settings } from "lucide-react";
 import { PibythreeLogo } from "./PibythreeLogo";
 import { cn } from "@/lib/utils";
 import { notifications } from "@/data/insights";
+import { signOut } from "@/lib/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -18,7 +27,13 @@ const NAV_ITEMS = [
 
 export function TopNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  function handleSignOut() {
+    signOut();
+    router.push("/login");
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-white/85 backdrop-blur-md">
@@ -31,7 +46,7 @@ export function TopNav() {
           </span>
         </Link>
 
-        <nav className="hidden flex-1 items-center gap-1 md:flex">
+        <nav className="hidden flex-1 items-center gap-1 xl:flex">
           {NAV_ITEMS.map((item) => {
             const active = pathname?.startsWith(item.href);
             return (
@@ -39,7 +54,7 @@ export function TopNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-surface",
+                  "relative shrink-0 rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-surface",
                   active && "text-primary bg-primary-soft hover:bg-primary-soft hover:text-primary"
                 )}
               >
@@ -74,15 +89,29 @@ export function TopNav() {
           >
             <Settings className="size-[18px]" />
           </Link>
-          <div className="ml-2 hidden items-center gap-2 rounded-full border border-border-subtle bg-surface py-1 pl-1 pr-3 lg:flex">
-            <span className="flex size-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white">
-              AB
-            </span>
-            <span className="text-xs font-medium text-foreground">Aditya Birla Group</span>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="ml-2 flex items-center gap-2 rounded-full border border-border-subtle bg-surface py-1 pl-1 pr-1 transition-colors hover:border-primary/30 xl:pr-3">
+                <span className="flex size-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white">
+                  AB
+                </span>
+                <span className="hidden text-xs font-medium text-foreground xl:block">
+                  Aditya Birla Group
+                </span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Signed in as admin</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={handleSignOut} className="text-critical focus:text-critical">
+                <LogOut className="size-3.5" />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-      <nav className="flex items-center gap-1 overflow-x-auto border-t border-border-subtle px-4 py-1.5 md:hidden">
+      <nav className="flex items-center gap-1 overflow-x-auto border-t border-border-subtle px-4 py-1.5 xl:hidden">
         {NAV_ITEMS.map((item) => {
           const active = pathname?.startsWith(item.href);
           return (

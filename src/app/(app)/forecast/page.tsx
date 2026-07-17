@@ -27,7 +27,7 @@ export default function ForecastPage() {
     regions: Region[];
     products: { id: string; name: string }[];
     dealers: string[];
-    plants: string[];
+    plants: { id: string; name: string }[];
   } | null>(null);
   const [filters, setFilters] = useState({
     region: "All Regions",
@@ -43,13 +43,13 @@ export default function ForecastPage() {
 
   useEffect(() => {
     let cancelled = false;
-    forecastService.getForecastSeries(granularity).then((data) => {
+    forecastService.getForecastSeries(granularity, filters).then((data) => {
       if (!cancelled) setSeries(data);
     });
     return () => {
       cancelled = true;
     };
-  }, [granularity]);
+  }, [granularity, filters]);
 
   return (
     <div className="flex flex-col gap-8">

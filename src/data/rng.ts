@@ -12,6 +12,14 @@ export function mulberry32(seed: number) {
   };
 }
 
+export function hashString(input: string): number {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = (Math.imul(31, hash) + input.charCodeAt(i)) | 0;
+  }
+  return hash >>> 0;
+}
+
 export function makeRand(seed: number) {
   const rand = mulberry32(seed);
   return {

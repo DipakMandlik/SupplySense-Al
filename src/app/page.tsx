@@ -104,7 +104,7 @@ export default function LandingPage() {
             </a>
           </nav>
           <Button asChild size="sm">
-            <Link href="/dashboard">
+            <Link href="/login">
               Explore Platform
               <ArrowRight className="size-3.5" />
             </Link>
@@ -149,7 +149,7 @@ export default function LandingPage() {
               className="mt-10 flex flex-wrap items-center justify-center gap-3"
             >
               <Button asChild size="lg">
-                <Link href="/dashboard">
+                <Link href="/login">
                   Explore Platform
                   <ArrowRight className="size-4" />
                 </Link>
@@ -290,7 +290,7 @@ export default function LandingPage() {
         {/* About Pibythree */}
         <section id="about" className="mx-auto max-w-[1600px] px-6 py-24 lg:px-10">
           <div className="mx-auto max-w-3xl text-center">
-            <PibythreeLogo className="justify-center" />
+            <PibythreeLogo className="items-center" size={48} tagline />
             <h2 className="mt-6 text-3xl font-semibold tracking-tight text-foreground">
               Enterprise AI &amp; Data Engineering, delivered
             </h2>
@@ -303,7 +303,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg">
-                <Link href="/dashboard">
+                <Link href="/login">
                   Explore the Platform
                   <ArrowRight className="size-4" />
                 </Link>
