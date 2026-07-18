@@ -56,7 +56,7 @@ export default function LoginPage() {
         className="relative flex w-full max-w-md flex-col items-center"
       >
         <div className="rounded-2xl bg-white p-4 shadow-xl">
-          <PibythreeLogo size={38} />
+          <PibythreeLogo size={40} priority />
         </div>
         <h1 className="mt-6 text-center text-xl font-semibold text-white">
           Pibythree SupplySense AI Platform

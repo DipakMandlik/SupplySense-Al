@@ -6,13 +6,21 @@ import type { NextConfig } from "next";
 const REPO_NAME = "SupplySense-Al";
 const isGithubPages = process.env.GITHUB_PAGES === "true";
 
+const basePath = isGithubPages ? `/${REPO_NAME}` : "";
+
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
-  basePath: isGithubPages ? `/${REPO_NAME}` : "",
+  basePath,
   assetPrefix: isGithubPages ? `/${REPO_NAME}/` : "",
   images: {
     unoptimized: true,
+  },
+  // next/image does not auto-prefix `src` with basePath when unoptimized
+  // (required for static export), so components that reference /public
+  // assets directly read this to build the correct path themselves.
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
   },
 };
 

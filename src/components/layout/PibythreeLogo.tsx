@@ -1,59 +1,39 @@
-import { Caveat } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const caveat = Caveat({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-script" });
+// Source dimensions of the cropped brand assets in public/brand/ — used to
+// preserve aspect ratio when the logo is rendered at a given height.
+const ICON_ASPECT = 421 / 174;
+const FULL_ASPECT = 524 / 225;
+
+// next/image does not prefix `src` with basePath when images.unoptimized is
+// true (required for static export), so this is applied manually — see
+// next.config.ts. Empty in local dev, "/SupplySense-Al" on GitHub Pages.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface PibythreeLogoProps {
   className?: string;
-  /** Pixel height the mark is sized against; everything scales proportionally. */
+  /** Rendered height in px; width follows the source asset's aspect ratio. */
   size?: number;
-  /** Show the "Transforming Enterprises for the Future" tagline beneath the mark. */
+  /** Use the full lockup (icon + "Transforming Enterprises for Future" tagline) instead of the icon alone. */
   tagline?: boolean;
+  priority?: boolean;
 }
 
-// The Pibythree brand mark: a navy "π", a gold script "by" and a sky-blue "3"
-// badge — reproduced to match the official logo (π by 3).
-export function PibythreeLogo({ className, size = 32, tagline = false }: PibythreeLogoProps) {
+export function PibythreeLogo({ className, size = 32, tagline = false, priority = false }: PibythreeLogoProps) {
+  const aspect = tagline ? FULL_ASPECT : ICON_ASPECT;
+  const width = Math.round(size * aspect);
+  const src = `${BASE_PATH}/brand/${tagline ? "pibythree-logo-full.png" : "pibythree-icon.png"}`;
+
   return (
-    <div className={cn("inline-flex flex-col", className)}>
-      <div className="flex items-end" style={{ height: size, gap: size * 0.04 }}>
-        <span
-          aria-hidden
-          className="font-serif italic font-bold leading-none text-[#1B3A6B]"
-          style={{ fontSize: size * 1.05 }}
-        >
-          π
-        </span>
-        <span
-          aria-hidden
-          className={cn(caveat.className, "italic leading-none text-[#E3A008]")}
-          style={{ fontSize: size * 0.46, marginBottom: size * 0.16 }}
-        >
-          by
-        </span>
-        <span
-          aria-hidden
-          className="relative flex shrink-0 items-center justify-center rounded-[0.28em] bg-[#27A9E1] font-bold text-white shadow-sm"
-          style={{ width: size * 0.64, height: size * 0.64, fontSize: size * 0.42, marginBottom: size * 0.02 }}
-        >
-          3
-          <sup
-            className="absolute -right-1.5 -top-0.5 font-semibold text-[#27A9E1]"
-            style={{ fontSize: size * 0.16 }}
-          >
-            TM
-          </sup>
-        </span>
-        <span className="sr-only">Pibythree</span>
-      </div>
-      {tagline && (
-        <span
-          className="mt-1 whitespace-nowrap font-semibold uppercase tracking-wide text-[#1B3A6B]"
-          style={{ fontSize: Math.max(10, size * 0.19) }}
-        >
-          Transforming Enterprises for the Future
-        </span>
-      )}
-    </div>
+    // eslint-disable-next-line @next/next/no-img-element -- avoids next/image's basePath gap under unoptimized static export
+    <img
+      src={src}
+      alt="Pibythree"
+      width={width}
+      height={size}
+      fetchPriority={priority ? "high" : undefined}
+      className={cn("object-contain", className)}
+      style={{ height: size, width }}
+    />
   );
 }

@@ -39,7 +39,7 @@ export function TopNav() {
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-6 px-6 lg:px-10">
         <Link href="/dashboard" className="flex items-center gap-3 shrink-0">
-          <PibythreeLogo />
+          <PibythreeLogo size={28} priority />
           <span className="hidden h-5 w-px bg-border-strong sm:block" />
           <span className="hidden text-sm font-medium text-muted-foreground sm:block">
             SupplySense AI

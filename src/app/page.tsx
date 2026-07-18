@@ -91,7 +91,7 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-40 border-b border-border-subtle bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-6 lg:px-10">
-          <PibythreeLogo />
+          <PibythreeLogo size={30} priority />
           <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a href="#capabilities" className="hover:text-foreground transition-colors">
               Platform
@@ -290,7 +290,7 @@ export default function LandingPage() {
         {/* About Pibythree */}
         <section id="about" className="mx-auto max-w-[1600px] px-6 py-24 lg:px-10">
           <div className="mx-auto max-w-3xl text-center">
-            <PibythreeLogo className="items-center" size={48} tagline />
+            <PibythreeLogo className="mx-auto" size={52} tagline />
             <h2 className="mt-6 text-3xl font-semibold tracking-tight text-foreground">
               Enterprise AI &amp; Data Engineering, delivered
             </h2>
