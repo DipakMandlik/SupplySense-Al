@@ -35,7 +35,7 @@ export function WarehouseCard({
       >
         <CardContent className="p-5">
           <div className="flex items-start justify-between gap-2">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-semibold text-foreground">{warehouse.name}</p>
               <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                 <MapPin className="size-3" />
