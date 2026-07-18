@@ -309,9 +309,6 @@ export default function LandingPage() {
               </Button>
               <RequestDemoDialog variant="outline" />
             </div>
-            <p className="mt-6 text-xs font-medium text-muted-foreground">
-              Powered by Pibythree AI Platform
-            </p>
           </div>
         </section>
       </main>
