@@ -14,7 +14,17 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the app.
+Open [http://localhost:3000](http://localhost:3000) to view the app. Sign in with `admin` / `admin`.
+
+## Live Demo
+
+Deployed automatically to GitHub Pages on every push via
+[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
+
+**https://dipakmandlik.github.io/SupplySense-Al/**
+
+(Requires the repository's **Settings → Pages → Build and deployment → Source** set to
+**GitHub Actions** — a one-time setting.)
 
 ## Stack
 
